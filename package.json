@@ -1,0 +1,21 @@
+{
+  "name": "ego-workforce-ai",
+  "version": "1.0.0",
+  "description": "EGO Workforce AI — Autonomous multi-agent orchestration for cross-platform enterprise business automation",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "test": "node --test test/workflow.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "openai": "^7.45.1"
+  }
+}

@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EGO Workforce AI — Autonomous Multi-Agent Orchestration</title>
+  <meta name="description" content="Autonomous multi-agent orchestration for cross-platform enterprise business automation. One instruction. Multiple AI employees. Verified results.">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Top App Navigation Header -->
+  <header class="app-header">
+    <div class="brand-section">
+      <div class="brand-logo" id="brandLogo">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1 id="appTitle">EGO Workforce AI</h1>
+        <p id="appTagline">One instruction. Multiple AI employees. Verified results.</p>
+      </div>
+    </div>
+
+    <!-- Main Navigation Tabs -->
+    <nav class="nav-tabs" id="mainNav">
+      <button class="nav-tab-btn active" id="tabBtn-overview" data-target="tab-overview">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Overview
+      </button>
+      <button class="nav-tab-btn" id="tabBtn-workforce" data-target="tab-workforce">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        AI Workforce
+      </button>
+      <button class="nav-tab-btn" id="tabBtn-runs" data-target="tab-runs">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Workflow Runs
+      </button>
+      <button class="nav-tab-btn" id="tabBtn-approvals" data-target="tab-approvals">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Approval Center
+        <span class="badge-counter" id="navApprovalBadge" style="display: none;">0</span>
+      </button>
+      <button class="nav-tab-btn" id="tabBtn-leads" data-target="tab-leads">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        CRM Leads
+      </button>
+      <button class="nav-tab-btn" id="tabBtn-history" data-target="tab-history">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Execution History
+      </button>
+    </nav>
+
+    <!-- Header Quick Controls -->
+    <div class="header-controls">
+      <!-- Simulate Tool Failure Toggle (Feature 9) -->
+      <div class="sim-switch-container" title="Simulates a transient 503 error on the next CRM operation to test automatic retry recovery.">
+        <span class="sim-switch-label">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Simulate Tool Failure
+        </span>
+        <label class="switch">
+          <input type="checkbox" id="simFailureToggle">
+          <span class="slider"></span>
+        </label>
+      </div>
+
+      <button class="btn-secondary-sm" id="reseedDataBtn" title="Reset CRM leads to initial 20 fictional prospects">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/></svg>
+        Reset Demo CRM
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- ====================================================================
+         TAB 1: OVERVIEW (Hero, Prompt, Stats, SafeRun Preview, Active DAG)
+         ==================================================================== -->
+    <div class="tab-pane active" id="tab-overview">
+
+      <!-- Hero Prompt Card: Natural Language Planner Agent -->
+      <section class="hero-prompt-card">
+        <div class="hero-title-row">
+          <h2>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+            Natural-Language Business Instruction
+          </h2>
+          <div class="model-tag" id="plannerModelBadge">
+            <span class="pulse-dot"></span>
+            <span id="plannerModelText">Loading agent status...</span>
+          </div>
+        </div>
+
+        <div class="prompt-input-wrapper">
+          <textarea
+            class="prompt-textarea"
+            id="promptInput"
+            rows="3"
+            placeholder="Instruct your AI workforce in natural language..."
+          >Qualify today's new leads, update their CRM records, draft personalized follow-up emails, and ask me before sending.</textarea>
+
+          <div class="prompt-footer">
+            <div class="prompt-presets">
+              <span class="preset-label">Quick Prompts:</span>
+              <button class="preset-pill" data-preset="Qualify today's new leads, update their CRM records, draft personalized follow-up emails, and ask me before sending.">Standard Lead Follow-up</button>
+              <button class="preset-pill" data-preset="Filter enterprise leads with budget over $80k, update pipeline stages, draft executive briefings, and require my approval before outreach.">Enterprise High-Value Pipeline</button>
+              <button class="preset-pill" data-preset="Audit all newly received leads, detect duplicates, flag missing contact records, and verify CRM data integrity with SafeRun proof.">Data Integrity & Deduplication Audit</button>
+            </div>
+
+            <button class="btn-primary" id="generatePlanBtn">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+              Generate Plan
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboard Statistics Grid -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon indigo">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value" id="statLeadsTotal">20</div>
+            <div class="stat-label">Total Simulated Leads</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon emerald">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value" id="statLeadsQualified">0</div>
+            <div class="stat-label">Qualified Prospects</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon cyan">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value" id="statWorkflowsTotal">0</div>
+            <div class="stat-label">Workflow Executions</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon amber">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value" id="statDraftsPending">0</div>
+            <div class="stat-label">Pending Human Approvals</div>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon emerald">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="stat-info">
+            <div class="stat-value" id="statEmailsSimulated">0</div>
+            <div class="stat-label">Simulated Emails Sent</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Signature Feature: SafeRun Preview & Risk Analysis (Shown when plan is generated) -->
+      <section class="saferun-container" id="safeRunPreviewSection" style="display: none;">
+        <div class="saferun-banner">
+          <div class="saferun-header-left">
+            <div class="saferun-badge-shield">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+            </div>
+            <div class="saferun-title-group">
+              <h3>SafeRun: Dry-Run Simulation & Pre-Execution Risk Analysis</h3>
+              <p>Simulating task impacts prior to state modification. Zero database changes made during preview.</p>
+            </div>
+          </div>
+
+          <button class="btn-primary" id="approveAndExecutePlanBtn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            Approve Plan & Execute Workforce
+          </button>
+        </div>
+
+        <div class="saferun-grid">
+          <!-- Summary of Impacts -->
+          <div class="saferun-card">
+            <div class="saferun-card-header">
+              <h4>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>
+                Projected Operation Impacts
+              </h4>
+              <span class="model-tag" style="font-size: 10px;">ESTIMATED</span>
+            </div>
+            <div class="proof-metrics-grid">
+              <div class="proof-metric-box">
+                <div class="proof-metric-val" id="prevPlannedTasks">0</div>
+                <div class="proof-metric-lbl">Planned Tasks</div>
+              </div>
+              <div class="proof-metric-box">
+                <div class="proof-metric-val" id="prevLeads">0</div>
+                <div class="proof-metric-lbl">Leads to Process</div>
+              </div>
+              <div class="proof-metric-box">
+                <div class="proof-metric-val" id="prevCrmUpdates">0</div>
+                <div class="proof-metric-lbl">CRM Writes</div>
+              </div>
+              <div class="proof-metric-box">
+                <div class="proof-metric-val" id="prevDrafts">0</div>
+                <div class="proof-metric-lbl">Email Drafts</div>
+              </div>
+              <div class="proof-metric-box">
+                <div class="proof-metric-val" id="prevDuplicates">0</div>
+                <div class="proof-metric-lbl">Duplicates Flagged</div>
+              </div>
+              <div class="proof-metric-box">
+                <div class="proof-metric-val" id="prevIncomplete">0</div>
+                <div class="proof-metric-lbl">Incomplete Data</div>
+              </div>
+            </div>
+            <div id="findingsAlertContainer" style="margin-top: 10px;"></div>
+          </div>
+
+          <!-- Risk Score & Factors -->
+          <div class="saferun-card">
+            <div class="saferun-card-header">
+              <h4>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 22 22 22"/></svg>
+                Autonomous Risk Assessment
+              </h4>
+              <span class="risk-level-badge medium" id="prevRiskBadge">MEDIUM RISK</span>
+            </div>
+            <div class="risk-meter-container">
+              <div class="risk-score-display">
+                <span class="risk-num" id="prevRiskScore">45</span>
+                <span style="color: var(--text-muted); font-size: 14px;">/ 100 Risk Index</span>
+              </div>
+              <div class="risk-bar-track">
+                <div class="risk-bar-fill" id="prevRiskBar" style="width: 45%; background: var(--status-warning);"></div>
+              </div>
+              <div class="risk-factors-list" id="prevRiskFactorsList">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Live Task Graph & Execution Dashboard -->
+      <section class="workflow-dag-section" id="activeDagSection">
+        <div class="section-header">
+          <div class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Live Task Graph & Workforce Execution
+            <span class="task-status-pill status-PLANNED" id="activeWorkflowStatusPill">IDLE</span>
+          </div>
+          <span style="font-family: var(--font-mono); font-size: 12px; color: var(--text-dim);" id="activeWorkflowIdLabel">No active workflow</span>
+        </div>
+
+        <div class="dag-flow-container" id="dagNodesContainer">
+          <div class="empty-state">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="1.5"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            <p style="margin-top: 10px;">Enter an instruction above and click <strong>Generate Plan</strong> to visualize the multi-agent task graph.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Signature Feature: EGO SafeRun Execution Proof Section (Post-Execution) -->
+      <section class="saferun-container" id="safeRunProofSection" style="display: none;">
+        <div class="proof-card">
+          <div class="proof-header">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="saferun-badge-shield" style="background: linear-gradient(135deg, #10b981, #06b6d4);">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>
+              </div>
+              <div>
+                <h3 style="font-family: var(--font-heading); font-size: 16px; color: #fff;">EGO SafeRun: Execution Proof</h3>
+                <p style="font-size: 12px; color: var(--text-muted);">Independent post-execution database verification confirming zero unauthorized drift.</p>
+              </div>
+            </div>
+
+            <span class="proof-badge" id="proofStatusBadge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+              PASSED_VERIFIED
+            </span>
+          </div>
+
+          <div class="proof-hash-row">
+            <span>Cryptographic State Fingerprint:</span>
+            <code id="proofHashVal" style="color: var(--accent-cyan);">0x...</code>
+          </div>
+
+          <div class="proof-metrics-grid" id="proofMetricsGrid">
+            <!-- Dynamically populated -->
+          </div>
+
+          <div style="margin-top: 14px;">
+            <h5 style="font-size: 12px; font-weight: 600; color: #cbd5e1; margin-bottom: 8px;">Audit Trail State Diffs (Before vs. After):</h5>
+            <div class="node-output-drawer" id="proofDiffsDrawer">Loading verification diffs...</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ====================================================================
+         TAB 2: AI WORKFORCE (Specialized Worker Agents)
+         ==================================================================== -->
+    <div class="tab-pane" id="tab-workforce">
+      <div class="section-header">
+        <div class="section-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          Specialized AI Workforce
+        </div>
+        <p style="font-size: 13px; color: var(--text-muted);">Four specialized autonomous workers governed by deterministic safety boundaries and allowlisted tools.</p>
+      </div>
+
+      <div class="workforce-grid">
+        <!-- Agent A: Lead Qualification Agent -->
+        <div class="agent-card agent-qual">
+          <div class="agent-header">
+            <div class="agent-avatar">🎯</div>
+            <div class="agent-info">
+              <h3>Lead Qualification Agent</h3>
+              <p>Specialization: Prospect Evaluation</p>
+            </div>
+          </div>
+          <p class="agent-desc">
+            Reads simulated CRM records and computes 0–100 qualification scores based on verified budget, purchase timeline, and enterprise solution alignment. Explicitly flags missing information.
+          </p>
+          <div class="agent-tools-tag-list">
+            <span class="tool-tag">crm_fetch_leads</span>
+            <span class="tool-tag">deterministic_scoring</span>
+            <span class="tool-tag">missing_data_detector</span>
+          </div>
+        </div>
+
+        <!-- Agent B: CRM Updater Agent -->
+        <div class="agent-card agent-crm">
+          <div class="agent-header">
+            <div class="agent-avatar">💾</div>
+            <div class="agent-info">
+              <h3>CRM Updater Agent</h3>
+              <p>Specialization: Database Synchronization</p>
+            </div>
+          </div>
+          <p class="agent-desc">
+            Persists qualification scores, updates pipeline stages, and detects duplicate records. Every database update captures before and after state diffs recorded in the immutable audit log.
+          </p>
+          <div class="agent-tools-tag-list">
+            <span class="tool-tag">crm_update_lead</span>
+            <span class="tool-tag">deduplication_engine</span>
+            <span class="tool-tag">audit_logger</span>
+          </div>
+        </div>
+
+        <!-- Agent C: Email Drafting Agent -->
+        <div class="agent-card agent-email">
+          <div class="agent-header">
+            <div class="agent-avatar">✍️</div>
+            <div class="agent-info">
+              <h3>Email Drafting Agent</h3>
+              <p>Specialization: Outreach Personalization</p>
+            </div>
+          </div>
+          <p class="agent-desc">
+            Produces tailored executive email drafts using verified prospect details, budget tiers, and product interest. Drafts are held in <code>PENDING_APPROVAL</code> status until human confirmation.
+          </p>
+          <div class="agent-tools-tag-list">
+            <span class="tool-tag">email_draft</span>
+            <span class="tool-tag">llm_personalization</span>
+            <span class="tool-tag">safety_boundary</span>
+          </div>
+        </div>
+
+        <!-- Agent D: Supervisor Agent -->
+        <div class="agent-card agent-super">
+          <div class="agent-header">
+            <div class="agent-avatar">🛡️</div>
+            <div class="agent-info">
+              <h3>Supervisor Agent</h3>
+              <p>Specialization: Safety & Orchestration</p>
+            </div>
+          </div>
+          <p class="agent-desc">
+            Enforces approval gates, executes simulated email sends strictly upon human sign-off, triggers bounded retries upon tool failures, and produces the cryptographic SafeRun Execution Proof.
+          </p>
+          <div class="agent-tools-tag-list">
+            <span class="tool-tag">email_send_simulated</span>
+            <span class="tool-tag">audit_verify</span>
+            <span class="tool-tag">bounded_retry_manager</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 3: WORKFLOW RUNS (Detailed Execution Graph & Logs)
+         ==================================================================== -->
+    <div class="tab-pane" id="tab-runs">
+      <div class="section-header">
+        <div class="section-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          Active Workflow Execution Graph
+        </div>
+      </div>
+      <div id="runsDagContainer" class="dag-flow-container">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 4: APPROVAL CENTER (Interactive Human Checkpoint)
+         ==================================================================== -->
+    <div class="tab-pane" id="tab-approvals">
+      <div class="section-header">
+        <div class="section-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--status-warning)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          Interactive Approval Center
+        </div>
+        <p style="font-size: 13px; color: var(--text-muted);">Human-in-the-Loop checkpoint. Inspect, edit, approve or reject pending agent actions.</p>
+      </div>
+
+      <div class="approval-list" id="approvalListContainer">
+        <div class="empty-state">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
+          <p style="margin-top: 10px;">No pending actions requiring approval at this time.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 5: CRM LEADS (Simulated Business Tools Data)
+         ==================================================================== -->
+    <div class="tab-pane" id="tab-leads">
+      <div class="table-container">
+        <div class="table-header-bar">
+          <div class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+            Simulated CRM Leads Database (20 Records)
+          </div>
+          <div style="font-size: 12px; color: var(--text-muted);">
+            Includes high-priority prospects, lower-priority accounts, incomplete records, and duplicate contacts.
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="leads-table" id="leadsTable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name / Contact</th>
+                <th>Company</th>
+                <th>Budget</th>
+                <th>Purchase Intent</th>
+                <th>Product Interest</th>
+                <th>Score</th>
+                <th>Priority</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTableBody">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ====================================================================
+         TAB 6: EXECUTION HISTORY (Runs & Audit Trail)
+         ==================================================================== -->
+    <div class="tab-pane" id="tab-history">
+      <div class="table-container">
+        <div class="table-header-bar">
+          <div class="section-title">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Workflow Execution History & Proofs
+          </div>
+        </div>
+
+        <div style="overflow-x: auto;">
+          <table class="leads-table" id="historyTable">
+            <thead>
+              <tr>
+                <th>Workflow ID</th>
+                <th>Prompt / Instruction</th>
+                <th>Status</th>
+                <th>Tasks</th>
+                <th>Duration</th>
+                <th>Created At</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <!-- Populated via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="sim-disclaimer">
+    ⚠️ <strong>SIMULATED ENVIRONMENT:</strong> All CRM updates and email transmissions are simulated locally within SQLite. Zero external network transmissions occur.
+  </footer>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
